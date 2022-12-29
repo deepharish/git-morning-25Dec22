@@ -1,5 +1,2 @@
-<<<<<<< HEAD
-This is a file for learning
-=======
-Second file created in Github to check the merger.
->>>>>>> c0b055f09768c556374d8d859648679dd47cbc5d
+This is a file for learning, Second file created in Github to check the merger.
+
