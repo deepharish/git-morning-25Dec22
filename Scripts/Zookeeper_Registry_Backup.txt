@@ -1,0 +1,30 @@
+@ECHO off
+@Title IP21 PROD STOP
+ECHO.
+
+REM - Set the Environment
+
+CALL 'E:\D2D\SCRIPTS\setenv.bat"
+
+REM - Prepare the Command Processor - 
+SET MONTH=%DATE:~4,2%
+SET DAY=%DATE:~7,2%
+SET YEAR=%DATE:~10,4%
+TIME /T > %HOME_SCRIPTS%\TIME.TXT
+SET /P HH=<%HOME_SCRIPTS%\TIME.TXT
+SET HOUR=%HH:~0,2%
+SET MINUTE=%TIME:~3,2%
+SET SECOND=%TIME:~6,4%
+SET DATESERIAL=%YEAR%%MONTH%%DAY%_%HOUR%%MINUTE%
+SET LOG=%HOME_LOGS%\Zookeeper_Backup_%DATESERIAL%.log
+set EMAIL_USERNAME=srcv
+set EMAI_Password=<Password of EMAIL_USERNAME>
+
+ECHO **************Zookeeper BAckup from IP21 PROD****************
+ECHO %time% "==========START===============" >> %LOG%
+ECHO %time% STARTING Zookeeper Backup from IP21 PROD
+ECHO %date% %time% Archiving the Zookeeper Folder Started >> %LOG%
+ECHO %time% "=========Folder Created with Today Date =======" >> %LOG%
+robocopy "\\SEGOTN16685.rds.volvo.com\d$\ARGUS_16685\gtwysrvr\registry" "\\SEGOTN16685.rds.volvo.com\d$\D2D\registry_%DATESERIAL%" /E >> %LOG%
+robocopy "\\SEGOTN16683.rds.volvo.com\d$\ARGUS_16683\gtwysrvr\registry" "\\SEGOTN16683.rds.volvo.com\d$\D2D\registry_%DATESERIAL%" /E >> %LOG%
+robocopy "\\SEGOTN16687.rds.volvo.com\d$\ARGUS_16687\gtwysrvr\registry" "\\SEGOTN16687.rds.volvo.com\d$\D2D\registry_%DATESERIAL%" /E >> %LOG%

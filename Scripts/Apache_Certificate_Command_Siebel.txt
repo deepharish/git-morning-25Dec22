@@ -1,0 +1,29 @@
+========================================================================================================================
+Apache Certificate
+========================================================================================================================
+keytool -list -v -keystore c:\apcerts\siebelkeystore.jks > c:\apcerts\keystorelistoutput.txt
+
+cd e:\Apps\SIA811\SweApp\jre\bin
+keytool -importkeystore -srckeystore c:\apercts\siebelkeystore.jks -srcstoretype JKS -destkeystore c:\apcerts\siebelkeystore.p12 -deststoretype PKCS12
+
+cd c:\Apache24\bin
+openssl pkcs12 -in "c:\apcerts\siebelkeystore.p12" -clcerts -nokeys -out "c:\apcerts\siebelcert.pem"
+openssl pkcs12 -in "c:\apcerts\siebelkeystore.p12" -nocerts -nodes -out "c:\apcerts\siebelkey.pem"
+
+cd e:\Apps\SIA811\SweApp\jre\bin
+
+keytool -list -v -keystore c:\apcerts\siebelkeystore.jks
+keytool -noprompt -keystore C:\apcerts\siebelkeystore.jks -exportcert -alias siebel19_prod -rfc -file "c:\apcerts\ca_cert.pem"
+
+cd c:\Apache24\bin
+openssl rsa -in "c:\apcerts\siebelkey.pem" -out "c:\apcerts\siebelkey.key"
+========================================================================================================================
+Keystore Password change 
+========================================================================================================================
+
+keytool -list -v -keystore d:\d2d\siebelkeystore.jks
+
+keytool -storepasswd -new siebel -keystore d:\d2d\siebelkeystore.jks -storepass Wellpoint@123
+keytool -keypasswd -alias siebelsitnew -keypass Wellpoint@123 -new siebel -keystore d:\d2d\siebelkeystore.jks -storepass siebel
+
+========================================================================================================================
