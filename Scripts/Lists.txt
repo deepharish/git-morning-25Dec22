@@ -150,9 +150,9 @@ deepharish/har@12
 
 https://github.com/deepharish/git-morning-25Dec22.git
 https://github.com/deepharish/git-morning-25Dec22.git
+deepharish
+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
 
-Token - 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
-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
 6) git cheat sheet of GIT hub commands -- 
 	After creating the repository in github.com
  I) Follow the below steps in client on your OS system
@@ -225,14 +225,90 @@ GIT Branching strategy -->
 			git commit -a -m "added the .gitignore" 
 			
 			
-	II) 	
+	II) 	git tag - End of the sprint not to change by developers
+	git log --oneline
+		01785ba (HEAD -> main, tag: final-commit-v5, origin/main) All changes migrated to GitHub
+		410570a Merge branch 'main' of https://github.com/deepharish/git-morning-25Dec22
+		58b9bc5 Merge pull request #2 from deepharish/fb1
+	
+	git tag --a final-commit-v5 01785ba -m "Do not change final-commit-v5"
+	git log --oneline
+	git show final-commit-v5 
+	git push --tags 		--> pushing to remote repository branch.
+	
+	we  can change the  tag name of latest commit statement 
+	git commit --amend  -- To update the last commit comments sessions.
+
+  III) GIT PR Approval & Rebase
+		Rebase & Merge difference 
+		git log --oneline --graph --decorate --all
+		
+		make the changes in file1.txt on MAIN 
+		git branch fb1
+		git checkout fb1
+		make the changes in file1.txt on fb1 branch
+		git checkout main
+		
+		git rebase fb1		-- and show conflict on file1.txt file, resolve the conflict and do the rebase again,
+		git add . 
+		git rebase --continue		-- make some comment and save the file
+		git add . 
+		git rebase --continue
+		git log --oneline --graph --decorate --all
+ IV) CI/CD pipe line.
+ 
 	
 7) AWS Scaling 
-8) Difference between Snapshot and AMI - Image snapshot (RJR Herbal Hospital) 
+ I)  Difference between Snapshot and AMI - Image snapshot (RJR Herbal Hospital) 
 
 Only data taking called Snapshot- Cannot create a new instance only backup of data
 Software & Application + Data called AMI(Bootable) - To create a new Instance
 
 AMI=AMI+Snapshot
 
-10)
+  ii) AWS Lambda, Auto Scaling, - 06-jun-2022
+ 
+8) JENKINS--> 06-Apr-2022
+ - Is a CI/CD tools (Continginous integration /contingious development) tools.
+ - is heart of CI/CD pipe line. 
+ - GIT + JENKINS integarted. 
+  
+  Download the jenkins from jenkins.io. with respectives OS 
+  Connect with EC2 Linux Machine  and install the Pre-requisite Java-1.8 * 
+  $yum install java-1.8* -y or yum install java-11-openjdk* (Worked) -- Install only Java 8 not 11
+  $java -version 
+  
+  To install the jenkins.io/downloads, Before that check the OS versions Name
+  $ cat /etc/os-release 
+	like - cento rhel fedoro on Amazon Linux machine
+	
+	From Jinkins.io/downloads and select the repective OS version and follow the command 
+		Jenkins Redhat package
+	$ sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+			See the status code - 200 OK
+	$ sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+	$ yum install jenkins -y 
+	
+	$ service jenkins status   -- Loaded but not started.
+	$ service jenkins start   -- Takes time to spappaned process..
+	$ service jenkins status
+	$ service enable jenkins 
+	$ systemctl enable jenkins  --> This will start automatically when login to OS machine all the time otherwise, need to start manually.
+	
+	/etc/init.d/jenkins
+	export PATH=$PATH:/bin:/usr/bin:/sbin:/usr/sbin:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-1.amzn2.0.1.x86_64/bin/
+	sudo vi /etc/default/jenkins
+	Access the OS IP to see able to access the Jenkin URL but not opened. We need to open the default Jenkin port - 8080. 
+	Git_server OS server -Security group - WebSG(Web Security group) - inbound section - edit inbound - Add Rule - Custom TCP - 8080 - AnywhereIP- Done
+	
+	Open the Chrome - http://PublicIP:8080/logins?form... and get page like "Unlock Jenkins" where the password file in 
+	http://13.213.211.236:8080/login?from=%2F		- Worked (Admin/Har).
+	http://13.213.211.236:8080/
+	/var/lib/jenkins/secrets/initialAdminPassword
+	
+	$ cat /var/lib/jenkins/secrets/initialAdminPassword		-- Its give the encrypted password and copy it and paste in Chrome URL on above step.
+	and, Install suggested plugins then create a Admin account, show the URL 
+	
+	
+	
+10-Jun-2022
