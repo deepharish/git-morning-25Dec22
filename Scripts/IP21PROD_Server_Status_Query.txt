@@ -1,0 +1,51 @@
+@ECHO off
+@Title IP21 PROD QUERY
+ECHO.
+ECHO ***********************IP21 PROD Volvo Enterprise*****************
+ECHO.
+ECHO Querying the Siebel Gateway Services STATUS:
+sc \\SEGOTN16685.rds.volvo.com query gtwyns
+sc \\SEGOTN16683.rds.volvo.com query gtwyns
+sc \\SEGOTN16687.rds.volvo.com query gtwyns
+
+ECHO Querying Tomcat AI container Services STATUS:
+sc \\SEGOTN16685.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16685_Internal
+sc \\SEGOTN16683.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16683_Internal
+sc \\SEGOTN16687.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16687_Internal
+sc \\SEGOTN16665.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16665_Internal
+sc \\SEGOTN16666.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16666_Internal
+sc \\SEGOTN16667.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16667_Internal
+sc \\SEGOTN16668.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16668_Internal
+sc \\SEGOTN16669.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16669_Internal
+sc \\SEGOTN16686.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_ARGUS_16686_Internal
+
+ECHO Querying the Siebel Server Services STATUS:
+sc \\SEGOTN16665.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16665
+sc \\SEGOTN16666.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16666
+sc \\SEGOTN16667.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16667
+sc \\SEGOTN16668.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16668
+sc \\SEGOTN16669.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16669
+sc \\SEGOTN16686.rds.volvo.com query siebsrvr_PROD_ARGUS_PROD_16686
+
+ECHO Querying the AI Container Services STATUS:
+sc \\SEGOTN16679.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_DB_External
+sc \\SEGOTN16679.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_External
+sc \\SEGOTN16679.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_SiteMinder_External
+
+sc \\SEGOTN16680.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_DB_External
+sc \\SEGOTN16680.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_External
+sc \\SEGOTN16680.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_SiteMinder_External
+
+sc \\SEGOTN16682.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_DB_External
+sc \\SEGOTN16682.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_External
+sc \\SEGOTN16682.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_MERCURIUS_External
+
+sc \\SEGOTN16684.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_DB_External
+sc \\SEGOTN16684.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_External
+sc \\SEGOTN16684.rds.volvo.com query SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_MERCURIUS_External
+ECHO.
+ECHO.
+ECHO.
+ECHO.
+ECHO.
+PAUSE

@@ -1,0 +1,314 @@
+1) server.xml
+Changing maxHttpHeaderSize=16384 in AI server.xml(Default = 8192)
+
+2) JVM Heap Size - Set 8192 in the CGQ and AI service 	- ThreadStackSize
+tomcat9w //ES//SiebelApplicationContainer_Siebel_Home_E_Apps_SIA811_SWEApp
+
+D:\ARGUS_16673\applicationcontainer_external\bin
+tomcat9w //ES//SiebelApplicationContainer_Siebel_Home_D_ARGUS_16673_Internal
+
+e:\Apps\SIA\SWEApp\Applicationcontainer\bin   - AI
+e:\Apps\SIA811\Applicationcontainer\bin - AI GW
+
+3) Gateway Zookeeper setting in gtwysrvr/zookeeper/conf/zoo1.cfg
+snapCount=100000
+maxSessionTimeout=60000
+minSessionTimeout=30000
+tickTime=4500
+
+
+4) Create named subsystem Test123 for subsystem "JMSSubsys" full name "Test 123" description 'Test 123 Description'
+
+create named subsystem CUSTOMSecAdptWSSAOLTRK for subsystem InfraSecAdpt_Custom full name 'CUSTOM Security Adapter - WSS AOL TRK' description 'Security Adapter for web SSO'
+
+
+5) New-Object System.Net.Sockets.TcpClient("SEGOTN16680.rds.volvo.com", 8452)
+
+6) RRCleanup - How to use RRCleanup.exe Utility to Delete Repository and cleanup Orphan records IP17 (Doc ID  2257977.1)
+
+Throughly after Repository Deletion with Orpan Records? (Doc ID 27078311.1)
+
+It is Recommended to PErform this Sequence: First delete RR, then delete B, then perform Orphan records without passing any repository.
+This will clean the repository and any orphan records left over.
+
+Step 1:
+List the repositories present in repective environment and export those name with below query
+	
+	select created, Row_ID, NAME from S_REPOSITORY order by CREATED Description
+
+Step 2:
+	Take the count from LOV tables and make a note of count Value.
+		
+			Select count(1) from siebel.S_LST_OF_VAL;
+			O/P -->1651308
+
+Step 3:
+	Take the count of LOV's not in Workspace ID. Mostly the count value would be Zero only.
+	
+		Select count(1) from siebel.S_LST_OF_VAL where WS_ID NOT IN (Select w.row_id from siebel.S_WORKSPACE W);
+
+Step 4:
+	The floowing command to delete a particular repository data from repository tables:
+	
+	Syntax: 
+	RRCleanup.exe -t "Table Owner" -u "Siebel User Name" -p "Siebel User Name Password" -r "Repository Name" -o "ODBC Data Source" -s "Path that contains odbcsql command" -b Repository Type 
+	
+	Note: For the -r argument, you can pass only one repository at a time as a parameter. For the -b argument, you can pass either of the repository types as parameter such as -b R to delete data from runtime repository tables or –b B to delete data from all repository tables
+	
+	Example:
+	RRCleanup.exe -t SIEBEL -u siebel -p <Siebel Password> -r "Repository Name_OLD" -o "ODBC Name" -s E:\siebel\tools -b "B"
+	
+Step 5:
+	Use the following command to delete orphan records. If you choose "-a", it applies to ALL orphan data. It essentially goes over all worspace-enabled tables(DR,RR, and LOV) and does "DELETE from XXX where WS_ID NOT in (select Row_ID from S_WORKSPACE).
+	
+	Syntax: 
+	RRCleanup.exe -t "Table Owner" -u "Siebel User Name" -p "Siebel User Name Password" -a Y -o "ODBC Data Source" -s "Path that contains odbcsql command" -b Repository Type 
+
+	Example:
+	RRCleanup.exe -t "SIEBEL" -u "SIEBEL" -p "Siebel Password" -a Y -o "ODBC Data Source" -s d:\siebel\Tools\bin -b "B"
+	
+Step 6:
+	To Check any LOV's present which are not present the workspace.
+	
+	Select count(1) from siebel.S_LST_OF_VAL where WS_ID NOT IN (Select w.row_id from siebel.S_WORKSPACE w);
+	
+	select count(1) from siebel.S_LST_OF_VAL;
+	
+	If count match with above query, do NOT processed with below steps.
+
+Step 7:
+
+	Delete from siebel.S_LST_OF_VAL where WS_ID NOT IN(select w.row_id from siebel.S_WORKSPACE w);
+
+Step 8:
+Verify the result(record count) with step 3
+	Select count(1) from siebel.S_LST_OF_VAL where WS_ID NOT IN (Select w.row_id from siebel.S_WORKSPACE w);
+	
+	select count(1) from siebel.S_LST_OF_VAL;
+	
+
+7) Renaming of Repository 
+siebdevcli /c <tools.cfg> /l <language_code> /u <username> /p ******** /d <DataSourceName> /SwitchToMigrationRepository <OLD_SIEBEL_REPOSITORY_NAME> <TargetRepositoryName>
+
+siebdevcli /c siebel.cfg /l ENU /u SADMIN /p SADMIN /d ServerDataSrc /SwitchToMigrationRepository "Siebel Repository_16NOV22M" "Siebel Repository"
+
+siebdevcli /c siebel.cfg /l ENU /u SADMIN /p SADMIN /d ServerDataSrc /SwitchToMigrationRepository "Siebel Repository" "Migrated Repository"
+
+D:\ARGUS_16676\siebsrvr\BIN>siebdevcli /c siebel.cfg /l ENU /u SADMIN /p SADMIN /d ServerDataSrc /SwitchToMigrationRepository "Siebel Repository_16NOV22M" "Siebel Repository"
+Executing Siebel Runtime Metadata Publisher Service for MigrateLongRunningWF
+Finished executing Siebel Runtime Metadata Publisher Service for MigrateLongRunningWF
+Executing Siebel Runtime Metadata Publisher Service for RenameMigrationRepository
+Finished executing Siebel Runtime Metadata Publisher Service for RenameMigrationRepository
+(Please wait a few seconds for this utility to finish)
+
+
+8) Logs to check.
+
+sqlplus sadmin/arguss4dm1n@garg8pDB	or GARG8P01
+sqlplus siebel/arguss13b3l@garg8pDB
+
+https://www.tyent.co.in/  - Water Filter 
+
+find /i "ORA-" *.log
+find /i "SBL-NET-01201" *.log
+
+https://www.youtube.com/watch?v=TcGTt4d-lBs
+
+9) PostInstallation Steps of parameter
+	Database Table Name - Siebel
+	Database Table Owner User NAme -Siebel
+	DB Table Owner PAssword - <Siebel Password>
+	DB User Name - SADMIN
+	DB Password - <Sadmin Password>
+	ODBC data Source Name - ServerDataSrc
+	Repository - Siebel Repository
+	Index Table Space Name - SIEBINDX
+	Table Space Name - SIEBDATA
+	Database Encoding - UniCode Database
+	Security Group ID/Grantee - SSE_ROLE
+	
+Manually PostInstallDBSetup-->
+		Arguments:
+			-i Setup.ini (Required) 
+			-p TBLO Password(Required) - SIEBEL Password 
+			-z Siebel User Password (Required) - SADMIN Password 
+		PostInstallDBSetup -i e:\apps\SIA811\siebsrvr\BIN\Setup.ini -p ******* -z ******
+		PostInstallDBSetup -i e:\apps\SIA811\siebsrvr\BIN\Setup.ini -p <Siebel DB Password> -z <Sadmin DB Password>
+
+New-Object System.Net.Sockets.TcpClient("Anthem.invoca.net",443)
+		
+10) AWS DevOPS====>>
+
+1) Security Group, Key Pair, Ec2, Elastic IPs
+2) Pricing AWS Calculator
+3) Free tier limits
+4) Difference between SVN and GIT
+5) How to migrate from SVN to GIT and what are the steps
+
+github.com is Central Server repository and GIT is local repository 
+deepharish/har@12
+
+https://github.com/deepharish/git-morning-25Dec22.git
+https://github.com/deepharish/git-morning-25Dec22.git
+deepharish
+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
+
+6) git cheat sheet of GIT hub commands -- 
+	After creating the repository in github.com
+ I) Follow the below steps in client on your OS system
+		git init		--> It initilize the empty repository with .git directory
+		vi python_code.py
+		git add python_code.py(Single file) or git add . (all files) 
+		git status 
+			- From Working tree it add in Index/staging Area
+		git commit -s "First commit"  - Show an error unauthorise user
+			- the file move from Index/staging to Local Branch
+		git config --global user.email "harish@gmail.com"
+		git config --global user.name "harish"  - user name of Github
+		git commit -s "First commit"  
+			- the file move from Index/staging to Local Branch
+			- Commited successfully to Local Branch 
+		before moving to git push, the default branch is Master 
+		git branch
+		They changed to MAIN
+		git branch -M "main"  - as a default branch.
+		git branch
+		git remote add origin "https://github.com/deepharish/git-morning-25Dec22.git"
+		git remove -v 
+		Before pushing to github server repository provide the credentials
+		go to github.com/settings/tokens from developer setting - Personal access tokens  and provide all the access then  and click on Generate Token button and copy the password. 
+		
+		git push -u orgin 'main'
+			user name - harish
+			password - enter the Generate token password.
+		Finally the file pushed from local branch to Remote server branch MAIN(github). 
+		
+		git log --oneline - to see the status of commit and log.
+		
+		IF any modified done on Github or X person then to compare 
+		git fetch  - to show the latest version object between source and TargetRepositoryName
+		git pull - to pull from Github to local GIT branch.
+	
+Merge/conflicit-->
+		git pull 		-- updated all files from remote to local (git)
+		git fetch		-- to show latest version from local and remote
+		and changed file1.txt 
+		git log --oneline
+	add and commit can do one command 
+		git commit -a -m "two in one like -a add and commit"
+		git push origin main
+				show an error like conflict and it failed to merge in remote 
+		git pull
+				- merge conflict failed and do the git add and rebase 
+			connect with 2 developer and resolve the conflict on file1.txt then push .
+		git add file1.txt
+		git commit --amend (do the change like resolve conflict commit) then git rebase --continue
+		git push origin main
+	
+GIT Branching strategy -->				
+		To create a new branch
+		git branch fb1
+		git checkout fb1
+		git commit -a -m "Pushing to FB1 branch in Remote"
+		git push origin fb1
+		then merge the fb1 version control files to main through Github URL
+		once merge is done. delete the branch fb1 in local with below commands
+		git branch -D fb1
+.gitignore -->
+			will create a file call .gitignore to ignore the files that present in the file
+			vi .gitignore
+				file1.txt
+				readme.md
+			:wq!
+			
+			git status
+			git commit -a -m "added the .gitignore" 
+			
+			
+	II) 	git tag - End of the sprint not to change by developers
+	git log --oneline
+		01785ba (HEAD -> main, tag: final-commit-v5, origin/main) All changes migrated to GitHub
+		410570a Merge branch 'main' of https://github.com/deepharish/git-morning-25Dec22
+		58b9bc5 Merge pull request #2 from deepharish/fb1
+	
+	git tag --a final-commit-v5 01785ba -m "Do not change final-commit-v5"
+	git log --oneline
+	git show final-commit-v5 
+	git push --tags 		--> pushing to remote repository branch.
+	
+	we  can change the  tag name of latest commit statement 
+	git commit --amend  -- To update the last commit comments sessions.
+
+  III) GIT PR Approval & Rebase
+		Rebase & Merge difference 
+		git log --oneline --graph --decorate --all
+		
+		make the changes in file1.txt on MAIN 
+		git branch fb1
+		git checkout fb1
+		make the changes in file1.txt on fb1 branch
+		git checkout main
+		
+		git rebase fb1		-- and show conflict on file1.txt file, resolve the conflict and do the rebase again,
+		git add . 
+		git rebase --continue		-- make some comment and save the file
+		git add . 
+		git rebase --continue
+		git log --oneline --graph --decorate --all
+ IV) CI/CD pipe line.
+ 
+	
+7) AWS Scaling 
+ I)  Difference between Snapshot and AMI - Image snapshot (RJR Herbal Hospital) 
+
+Only data taking called Snapshot- Cannot create a new instance only backup of data
+Software & Application + Data called AMI(Bootable) - To create a new Instance
+
+AMI=AMI+Snapshot
+
+  ii) AWS Lambda, Auto Scaling, - 06-jun-2022
+ 
+8) JENKINS--> 06-Apr-2022
+ - Is a CI/CD tools (Continginous integration /contingious development) tools.
+ - is heart of CI/CD pipe line. 
+ - GIT + JENKINS integarted. 
+  
+  Download the jenkins from jenkins.io. with respectives OS 
+  Connect with EC2 Linux Machine  and install the Pre-requisite Java-1.8 * 
+  $yum install java-1.8* -y or yum install java-11-openjdk* (Worked) -- Install only Java 8 not 11
+  $java -version 
+  
+  To install the jenkins.io/downloads, Before that check the OS versions Name
+  $ cat /etc/os-release 
+	like - cento rhel fedoro on Amazon Linux machine
+	
+	From Jinkins.io/downloads and select the repective OS version and follow the command 
+		Jenkins Redhat package
+	$ sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+			See the status code - 200 OK
+	$ sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+	$ yum install jenkins -y 
+	
+	$ service jenkins status   -- Loaded but not started.
+	$ service jenkins start   -- Takes time to spappaned process..
+	$ service jenkins status
+	$ service enable jenkins 
+	$ systemctl enable jenkins  --> This will start automatically when login to OS machine all the time otherwise, need to start manually.
+	
+	/etc/init.d/jenkins
+	export PATH=$PATH:/bin:/usr/bin:/sbin:/usr/sbin:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-1.amzn2.0.1.x86_64/bin/
+	sudo vi /etc/default/jenkins
+	Access the OS IP to see able to access the Jenkin URL but not opened. We need to open the default Jenkin port - 8080. 
+	Git_server OS server -Security group - WebSG(Web Security group) - inbound section - edit inbound - Add Rule - Custom TCP - 8080 - AnywhereIP- Done
+	
+	Open the Chrome - http://PublicIP:8080/logins?form... and get page like "Unlock Jenkins" where the password file in 
+	http://13.213.211.236:8080/login?from=%2F		- Worked (Admin/Har).
+	http://13.213.211.236:8080/
+	/var/lib/jenkins/secrets/initialAdminPassword
+	
+	$ cat /var/lib/jenkins/secrets/initialAdminPassword		-- Its give the encrypted password and copy it and paste in Chrome URL on above step.
+	and, Install suggested plugins then create a Admin account, show the URL 
+	
+	
+	
+10-Jun-2022

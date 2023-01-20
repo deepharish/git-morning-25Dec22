@@ -1,0 +1,74 @@
+=======================================================================================================================================================
+Certificate Generation for PROD
+======================================================================================================================================================= 
+SiebelPROD2021
+argusglboui.srv.volvo.com
+argusglb.srv.volvo.com
+siebelkeystore.jks
+
+Step 1
+//Generate Keystore by Siebel Team:
+keytool -genkey -alias siebel -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks -keyalg RSA -sigalg SHA256withRSA -keysize 2048 -validity 365 -dname "cn=argusglboui.srv.volvo.com,OU=CommercialSolutions, O=VolvoGroupIT, L = Gothenburg, C=SE" -ext san=dns:SEGOTN16665.rds.volvo.com,dns:SEGOTN16666.rds.volvo.com,dns:SEGOTN16667.rds.volvo.com,dns:SEGOTN16668.rds.volvo.com,dns:SEGOTN16669.rds.volvo.com,dns:SEGOTN16679.rds.volvo.com,dns:SEGOTN16680.rds.volvo.com,dns:SEGOTN16682.rds.volvo.com,dns:SEGOTN16683.rds.volvo.com,dns:SEGOTN16684.rds.volvo.com,dns:SEGOTN16685.rds.volvo.com,dns:SEGOTN16686.rds.volvo.com,dns:SEGOTN16687.rds.volvo.com,dns:SEGOTN16706.rds.volvo.com,dns:SEGOTN16890.rds.volvo.com,dns:argus.srv.volvo.com,dns:argusglboui.srv.volvo.com,dns:argusglb.srv.volvo.com,dns:argusoui.srv.volvo.com,dns:argusouiold.srv.volvo.com,dns:argusold.srv.volvo.com
+
+//Check Content of Keystore
+keytool -list -v -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks >D:\Siebel\CERTS\VPROD_Cert_S\Key\Keystorebefore_23Aug2022.txt
+
+//Generate Certificate Signing Request in CSR format.
+keytool -certreq -alias siebel -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks -file D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystoreS.csr -ext san=dns:SEGOTN16665.rds.volvo.com,dns:SEGOTN16666.rds.volvo.com,dns:SEGOTN16667.rds.volvo.com,dns:SEGOTN16668.rds.volvo.com,dns:SEGOTN16669.rds.volvo.com,dns:SEGOTN16679.rds.volvo.com,dns:SEGOTN16680.rds.volvo.com,dns:SEGOTN16682.rds.volvo.com,dns:SEGOTN16683.rds.volvo.com,dns:SEGOTN16684.rds.volvo.com,dns:SEGOTN16685.rds.volvo.com,dns:SEGOTN16686.rds.volvo.com,dns:SEGOTN16687.rds.volvo.com,dns:SEGOTN16706.rds.volvo.com,dns:SEGOTN16890.rds.volvo.com,dns:argus.srv.volvo.com,dns:argusglboui.srv.volvo.com,dns:argusglb.srv.volvo.com,dns:argusoui.srv.volvo.com,dns:argusouiold.srv.volvo.com,dns:argusold.srv.volvo.com
+
+CA Certificates Steps 
+
+REM IMPORT VOLVO GROUP ROOT CA CERTIFICATE
+keytool -import -alias volvo_root_ca -file D:\Siebel\CERTS\VPROD_Cert_S\CA\VolvoGroupRootCA.cer -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks
+
+REM IMPORT VOLVO GROUP CLASS 2 CHILD OF VOLVO GROUP ROOT CA CERTIFICATE
+keytool -import -alias volvo_intermediary_ca3 -file D:\Siebel\CERTS\VPROD_Cert_S\CA\VolvoGroupClass2IssuingCA3.cer -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks
+
+REM FINALLY IMPORTING CA SIGNED CERTIFICATE
+keytool -import -alias siebel -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks -file D:\Siebel\CERTS\VPROD_Cert_S\CA\Prod_CA_Signed.cer
+
+Trusted CERTIFICATE
+REM CREATE TRUST STORE
+keytool -import -alias volvo_root_ca -file D:\Siebel\CERTS\VPROD_Cert_S\CA\VolvoGroupRootCA.cer -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\truststore.jks
+
+keytool -list -v -keystore D:\Siebel\CERTS\VPROD_Cert_S\Key\siebelkeystore.jks >D:\Siebel\CERTS\VPROD_Cert_S\Key\KeystoreAfterCASigned_23Aug2022.txt
+=======================================================================================================================================================
+https://www.stevefenton.co.uk/2012/09/convert-certificate-from-jks-format-to-pfx-format/
+keytool -importkeystore -srckeystore thekeystore.jks \
+            -srcstoretype JKS \
+            -destkeystore thekeystore.pfx \
+            -deststoretype PKCS12
+
+keytool -importkeystore -srckeystore "C:\certs\test.jks" -srcstoretype JKS -srcstorepass SomePassword -destkeystore "C:\certs\test.pfx" -deststoretype PKCS12 -deststorepass SomePassword
+
+keytool -importkeystore -srckeystore "C:\certs\siebelkeystore.jks" -srcstoretype JKS -srcstorepass SiebelPROD2021 -destkeystore "C:\certs\siebelprodpfxip21.pfx" -deststoretype PKCS12 -deststorepass SiebelPROD2021
+
+Private Key OPENSSL 
+C:\Program Files\OpenSSL-Win64\bin
+SET OPENSSL=C:\Program Files\OpenSSL-Win64\bin
+SET PATH=%PATH%;%OPENSSL%
+REM Run the following command to extract the private key from .PFX
+openssl pkcs12 -in C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\siebelprodpfxip21_SSL.pfx -nocerts -out C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\SiebelProdP21SSLPrivatekey.key
+
+Run the following command to decrypt the private key
+openssl rsa -in [drlive.key] -out [drlive-decrypted.key]
+openssl rsa -in C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\SiebelProdP21SSLPrivatekey.key -out C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\[SiebelProdP21SSLPrivatekey_decrypted.key]
+
+OR 
+
+REM Run the following command to extract the private key from .PFX
+openssl pkcs12 -in C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\siebelprodpfxip21.pfx -nocerts -out C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\SiebelProdP21Privatekey.key
+
+Run the following command to decrypt the private key
+openssl rsa -in [drlive.key] -out [drlive-decrypted.key]
+openssl rsa -in C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\SiebelProdP21Privatekey.key -out C:\Volvo\Certs\PROD\VPROD_Cert_S\PFX_SSL_Cert\SiebelProdP21Privatekey_decrypted.key
+
+
+Mail server Certificate Import
+
+keytool -import -alias volvo_intermediary_ca3 -file E:\IP21Comp_Script\Cert_Mail\VolvoGroupClass2IssuingCA3.cer -keystore E:\IP21Comp_Script\Cert_Mail\truststore.jks
+keytool -import -alias mailbox2023 -keystore E:\IP21Comp_Script\Cert_Mail\truststore.jks -file E:\IP21Comp_Script\Cert_Mail\mailcert.cer
+keytool -import -alias mailbox2023 -keystore E:\IP21Comp_Script\Cert_Mail\siebelkeystore.jks -file E:\IP21Comp_Script\Cert_Mail\mailcert.cer
+
+https://www.httpcs.com/en/ssl-converter
+=================================================================================================================================================

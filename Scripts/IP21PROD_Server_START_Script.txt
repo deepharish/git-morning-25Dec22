@@ -1,0 +1,95 @@
+ECHO off
+@Title IP21 PROD START
+ECHO.
+
+REM - Set the Environment
+
+CALL 'E:\D2D\SCRIPTS\setenv.bat"
+
+REM - Prepare the Command Processor - 
+SET MONTH=%DATE:~4,2%
+SET DAY=%DATE:~7,2%
+SET YEAR=%DATE:~10,4%
+TIME /T > %HOME_SCRIPTS%\TIME.TXT
+SET /P HH=<%HOME_SCRIPTS%\TIME.TXT
+SET HOUR=%HH:~0,2%
+SET MINUTE=%TIME:~3,2%
+SET SECOND=%TIME:~6,4%
+SET DATESERIAL=%YEAR%%MONTH%%DAY%_%HOUR%%MINUTE%
+
+REM - LOG File
+
+SET LOG=%HOME_LOGS%\IP21PROD_START_%DATESERIAL%.log
+ECHO *******IP21 PROD START********
+ECHO %time% "===================START======================">>%LOG%
+ECHO.
+ECHO Press Enter If you sure for STARTING IP21 PROD Siebel Enterprise?
+PAUSE
+ECHO.
+echo %Time% STARTING the Siebel Gateway Services
+ECHO %date% %time% STARTING Siebel Gateway Services >> %LOG%
+(sc \\SEGOTN16685.rds.volvo.com START gtwyns) >> %LOG% 2>>&1
+(sc \\SEGOTN16683.rds.volvo.com START gtwyns) >> %LOG% 2>>&1
+(sc \\SEGOTN16687.rds.volvo.com START gtwyns) >> %LOG% 2>>&1
+ECHO %time% WAITING for 60 seconds after STARTING the Siebel Gateway Service
+PING -n 60 LOCALHOST > NUL
+ECHO %time% STARTED the Siebel Gateway Services
+ECHO %date% %time% STARTED Siebel Gateway Services >> %LOG%
+ECHO. 
+echo %time% STARTING AI INTERNAL Container Services
+ECHO %date% %time% STARTING AI INTERNAL Container Services >>%LOG%
+(sc \\SEGOTN16685.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16685_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16683.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16683_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16687.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16687_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16665.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16665_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16666.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16666_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16667.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16667_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16668.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16668_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16669.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16669_Internal) >>%LOG% 2>>&1
+(sc \\SEGOTN16686.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_ARGUS_16686_Internal) >>%LOG% 2>>&1
+ECHO %time% WAITING for 100 seconds after STARTING the AI INTERNAL Container Services
+PING -n 100 LOCALHOST > NUL
+ECHO %time% STARTING the AI INTERNAL Container Services
+ECHO %date% %time% STARTING AI INTERNAL Container Services >>%LOG%
+ECHO.
+ECHO %time% STARTING the Siebel Server services
+ECHO %date% %time% STARTING Siebel Server Services >> %LOG%
+(sc \\SEGOTN16665.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16665) >>%LOG% 2>>&1
+(sc \\SEGOTN16666.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16666) >>%LOG% 2>>&1
+(sc \\SEGOTN16667.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16667) >>%LOG% 2>>&1
+(sc \\SEGOTN16668.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16668) >>%LOG% 2>>&1
+(sc \\SEGOTN16669.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16669) >>%LOG% 2>>&1
+(sc \\SEGOTN16686.rds.volvo.com START siebsrvr_PROD_ARGUS_PROD_16686) >>%LOG% 2>>&1
+ECHO %time% WAITING for 100 seconds after STARTING the SES Container services
+PING -n 100 LOCALHOST > NUL
+ECHO %time% STARTING the siebel server services
+ECHO %date% %time% STARTING Siebel Server services >>%LOG%
+
+ECHO.
+ECHO %time% STARTING the AI Container Service
+ECHO %DATE% %TIME% STARTING AI EXTERNAL Container Service >> %LOG%
+
+(sc \\SEGOTN16679.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_DB_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16679.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16679.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16679_SiteMinder_External) >>%LOG% 2>>&1
+timeout /t 60
+(sc \\SEGOTN16680.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_DB_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16680.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16680.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16680_SiteMinder_External) >>%LOG% 2>>&1
+timeout /t 60
+(sc \\SEGOTN16682.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_DB_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16682.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16682.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16682_MERCURIUS_External) >>%LOG% 2>>&1
+timeout /t 60
+(sc \\SEGOTN16684.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_DB_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16684.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_External) >>%LOG% 2>>&1
+(sc \\SEGOTN16684.rds.volvo.com START SiebelApplicationContainer_Siebel_Home_D_SweApp_16684_MERCURIUS_External) >>%LOG% 2>>&1
+
+ECHO %time% WAITING for 60 Seconds after STARTED the AI EXTERNAL Container Service
+PING -n 60 LOCALHOST > NUL
+ECHO %time% STARTED the AI EXTERNAL Container Service
+ECHO %date% %time% STARTED AI EXTERNAL Container Service >> %LOG%
+ECHO.
+ECHO STARTED IP21 PROD Siebel Enterprise
+ECHO Press Enter to close this Window
+PAUSE
