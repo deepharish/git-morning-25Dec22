@@ -1,0 +1,20 @@
+set year=%date:~10,4%
+set month=%date:~4,2%
+set day=%date:~7,2%
+SET MONTH=%date:~4,2%
+SET DAY=%date:~7,2%
+SET YEAR=%date:~10,4%
+
+SET HOME_SCRIPTS=c:\migration\LGH\EIM_TABLES_DAILY
+TIME /T > %HOME_SCRIPTS%\TIME.TXT
+SET /P HH=<%HOME_SCRIPTS%\TIME.TXT
+
+SET HOUR=%HH:~0,2%
+SET MINUTE=%TIME:~3,2%
+SET SECOND=%TIME:~6,4%
+
+set filename=EIM_DAILY_DATA_%year%%month%%day%%HOUR%%MINUTE%%SECOND%
+sqlplus "siebel/siebel_pass@siebtsn" @c:\migrations\newprod\EIM_TABLES_DAILY.sql
+
+TIMEOUT 5
+ 
