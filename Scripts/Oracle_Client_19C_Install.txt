@@ -1,0 +1,18 @@
+Oracle 19c Client Installation :
+
+1) Click on Setup.exe application icon
+2) Select type if installation as "Administrator(1.5gb)
+3) Select Oracle Home User selction as "Use Windows Built-in Account"
+4) Select Installation location 
+	Oracle Base : E:\ App\Client
+	Software Location: e:\App\client\product\19.0\client_1
+5) View the Summary and click on Next
+6) Install Product to see the status not to have any failed or pre-requisite missing.
+7) Once Finished then click on Close button.
+8) And, Update the path variable to use only 19C client.
+Only below occurence of client path should be present in the PATH variable
+ Control Panal - System and Security - Administrative Tools - System Properties - Advanced Tab - In System Variables - Select PATH
+ - Edit System -  and add 19c and remove 12c parameters 
+ 
+ Test connection using new 19C client.
+ 
